@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 align="center">Вся наша мебель</h1>
+{% if mebels %}
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <table class="table-responsive">
+      <thead>
+        <tr>
+          <th scope="col">Цена</th>
+          <th scope="col">Описание</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for mebel in page_obj %}
+        <tr>
+          <th scope="row"><a href={{mebel.link}}> {{mebel.price}}</a></th>
+          <td> {{mebel.description}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{% else %}
+    <h1>К сожалению мебели ещё нет</h1>
+
+{% endif %}
+
+<nav>
+  {% load i18n %}
+  <style>
+   ul.hr {
+    margin: 0;
+    padding: 4px;
+   }
+   ul.hr li {
+    display: inline;
+    margin-right: 5px;
+    border: 1px solid #000;
+    padding: 3px;
+   }
+  </style>
+    <ul align="center" class="hr" >
+     {% if  page_obj.has_previous %}
+        <li>
+            <a class="Next" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q=
+                      {{request.GET.q }}{% endif %}">{% trans 'Предыдущая' %}
+            </a>
+          </li>
+       {% endif %}
+       {% for n in page_obj.paginator.page_range %}
+            {% if n > page_obj.number|add:-3 and n < page_obj.number|add:3 %}
+                  <li class='{% if n == page_obj.number %}active{% else %}no-active{% endif %}'>
+                        <a href='?page={{ n }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}'>{{ n }}</a>
+                   </li>
+              {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li>
+                 <a class="Next" href="?page=
+                               {{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                     {% trans 'Следующая' %}</a>
+            </li>
+         {% endif %}
+</ul>
+</nav>
+{% endblock %}
